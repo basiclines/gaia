@@ -118,6 +118,12 @@ ul[role="tablist"][data-type="filter"] > [role="tab"].selected > a {
   width: 5rem;
 }
 
+.icon-incoming,
+.icon-outgoing,
+.icon-missed {
+  background-size: 3rem;
+}
+
 [data-type="list"] aside.icon.icon-incoming {
   background-image: url('images/CallLog_30x30_incoming.png');
 }
@@ -220,12 +226,8 @@ ul[role="tablist"][data-type="filter"] > [role="tab"].selected > a {
   No result container
 */
 #no-result-container {
-  background-image: url('images/ComLog_200x200_clock.png');
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-  background-position:center;
+  background: url('images/ComLog_200x200_clock.png') fixed no-repeat center / 20rem;
   height: 100%;
-  width: 100%;
 }
 
 #no-result-message {
@@ -235,8 +237,8 @@ ul[role="tablist"][data-type="filter"] > [role="tab"].selected > a {
   top: 50%;
   border-top: .1rem solid rgba(96,96,96,.5);
   padding: 2rem 0.5rem;
-  width: 270px;
-  margin: -80px auto;
+  width: 27rem;
+  margin: -8rem auto;
   color: #606060;
   font-weight: 300;
   font-size: -moz-calc(10 * 0.226rem);
