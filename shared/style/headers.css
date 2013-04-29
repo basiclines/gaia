@@ -321,6 +321,7 @@ section[role="region"].skin-dark > header,
 section[role="region"].skin-organic > header:first-child,
 .skin-organic section[role="region"] > header:first-child {
   background-image: url(headers/images/ui/organic/header.png),  url(headers/images/ui/organic/pattern.png);
+  background-size: auto 100%;
 }
 
 section[role="region"].skin-organic > header:first-child:after,
