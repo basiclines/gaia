@@ -39,6 +39,7 @@ fbFriends.List = (function() {
       friends.forEach(function(friend) {
         var searchInfo = [];
         var searchable = ['givenName', 'familyName'];
+
         searchable.forEach(function(field) {
           if (friend[field] && friend[field][0]) {
             searchInfo.push(friend[field][0]);
