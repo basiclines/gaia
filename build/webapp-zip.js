@@ -48,7 +48,7 @@ function addToZip(zip, pathInZip, file) {
 
 
   if (isSubjectToBranding(file.path)) {
-    file.append((OFFICIAL == 1) ? 'official' : 'unofficial');
+    file.append((BRAND != '') ? BRAND.toString() : 'unofficial');
   }
 
   if (!file.exists())
@@ -314,7 +314,7 @@ Gaia.webapps.forEach(function(webapp) {
     path.split('/').forEach(function(segment) {
       file.append(segment);
       if (isSubjectToBranding(file.path)) {
-        file.append((OFFICIAL == 1) ? 'official' : 'unofficial');
+        file.append((BRAND != '') ? BRAND.toString() : 'unofficial');
       }
     });
     if (!file.exists()) {

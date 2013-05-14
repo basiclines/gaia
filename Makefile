@@ -372,6 +372,7 @@ define run-js-command
 	const PRODUCTION = "$(PRODUCTION)";                                         \
 	const HIDPI = "$(HIDPI)";                                     \
 	const DOGFOOD = "$(DOGFOOD)";                                               \
+	const BRAND = "$(BRAND)";                                     \
 	const OFFICIAL = "$(MOZILLA_OFFICIAL)";                                     \
 	const GAIA_DEFAULT_LOCALE = "$(GAIA_DEFAULT_LOCALE)";                       \
 	const GAIA_INLINE_LOCALES = "$(GAIA_INLINE_LOCALES)";                       \
