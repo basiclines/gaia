@@ -128,6 +128,48 @@ var WindowManager = (function() {
     }
   }
 
+  function scaleContent(browserFrame) {
+
+    if (browserFrame.parentNode.className == 'wrappedViewport') {
+        var viewport = browserFrame.parentNode;
+    } else {
+        var viewport = document.createElement("section");
+      viewport.className="wrappedViewport";
+      // We need to remove "remote", as it causes mismapped events:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=827802
+      browserFrame.removeAttribute('remote');
+    }
+
+    // Virtual scale for proper webapps display
+    var virtualScale = (function vScale(){
+        var BASE_SIZE = 320;
+      if (browserFrame.parentNode.className == 'wrappedViewport') {
+          var scaleRatio = browserFrame.parentNode.dataset.scale;
+      } else {
+          var scaleRatio = window.innerWidth/BASE_SIZE;
+      }
+
+      var browserFrameWidth = parseInt(browserFrame.style.width.split('px')[0])/scaleRatio;
+      var browserFrameHeight = parseInt(browserFrame.style.height.split('px')[0])/scaleRatio;
+
+      var controlsHeight = 5*scaleRatio;
+
+      // Apply new values
+      viewport.style.width = browserFrameWidth+'px';
+      viewport.style.height = browserFrameHeight-controlsHeight+'px';
+      if (browserFrame.parentNode.className !== 'wrappedViewport') {
+          viewport.dataset.scale = scaleRatio;
+        viewport.style.transform = 'scale('+scaleRatio+')';
+      }
+    })();
+
+    if (browserFrame.parentNode.className !== 'wrappedViewport') {
+        // Move app to scaled viewport
+      viewport.appendChild(browserFrame);
+      windows.appendChild(viewport);
+    }
+  }
+
   // Make the specified app the displayed app.
   // Public function.  Pass null to make the homescreen visible
   function launch(origin) {
@@ -177,18 +219,20 @@ var WindowManager = (function() {
 
     var cssWidth = window.innerWidth + 'px';
     var cssHeight = window.innerHeight - StatusBar.height;
-    if ('wrapper' in frame.dataset) {
-      cssHeight -= 10;
-    }
-    cssHeight += 'px';
 
     if (!screenElement.classList.contains('attention') &&
         requireFullscreen(origin)) {
-      cssHeight = window.innerHeight + 'px';
+        cssHeight = window.innerHeight + 'px';
     }
+
+    cssHeight += 'px';
 
     frame.style.width = cssWidth;
     frame.style.height = cssHeight;
+
+    if ('wrapper' in frame.dataset) {
+      scaleContent(frame);
+    }
 
     // We will call setInlineActivityFrameSize()
     // if changeActivityFrame is not explicitly set to false.
@@ -1228,6 +1272,7 @@ var WindowManager = (function() {
 
     if (!manifestURL) {
       frame.setAttribute('data-wrapper', 'true');
+      frame.classList.add('wrappedApp');
       return frame;
     }
 
@@ -1377,7 +1422,11 @@ var WindowManager = (function() {
     var frame = app.frame;
 
     if (frame) {
-      windows.removeChild(frame);
+      if ('wrapper' in frame.dataset) {
+        windows.removeChild(frame.parentNode);
+      } else {
+        windows.removeChild(frame);
+      }
       clearFrameBackground(frame);
     }
 
@@ -1977,7 +2026,10 @@ var WindowManager = (function() {
       // system app content processes data jar.
       iframe = document.createElement('iframe');
       iframe.setAttribute('mozbrowser', 'true');
-      iframe.setAttribute('remote', 'true');
+
+      // iframe.setAttribute('remote', 'true');
+      // We need to remove "remote", as it causes mismapped events:
+      // https://bugzilla.mozilla.org/show_bug.cgi?id=827802
 
       iframe.addEventListener('mozbrowserloadstart', function start() {
         iframe.dataset.loading = true;

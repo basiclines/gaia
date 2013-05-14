@@ -2,12 +2,20 @@ html {
   font-size: 10px;
 }
 
+@media screen and (min-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+}
+
 body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+
   overflow: hidden;
+
   font-family: 'MozTT', sans-serif;
   color: #fff;
 }
@@ -18,7 +26,8 @@ body {
   width: 100%;
   height: 100%;
   background-color: #000;
-  background-size: cover; /* Possible memory over-consumption with huge images, it should be removed for improving stability*/
+  background-size: cover;
+  /* Possible memory leaks, it should be removed for improving stability*/
   background-repeat: no-repeat;
   background-position: 50% 2rem;
 }
@@ -214,7 +223,7 @@ body {
   max-height: 100%;
 }
 
-#windows > .appWindow {
+#windows .appWindow {
   position: fixed;
   border: 0;
   margin: 0;
@@ -222,6 +231,8 @@ body {
   overflow: hidden;
   left: 0;
   top: 2rem;
+  width: 100%;
+  height: calc(100% - 2rem);
 
   /* Need to leave this in here to prevent flickering. */
   transform: scale(1);
@@ -237,11 +248,30 @@ body {
  * Gecko.  The performance issue should be fixed by
  * https://bugzilla.mozilla.org/show_bug.cgi?id=697645 or a related bug.
  *
-  border-radius: 0.8rem;
+  border-radius: 0.80rem;
  */
 }
 
-#windows > .appWindow > iframe {
+#windows .wrappedViewport {
+  transform: scale(1);
+  transform-origin: left top;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  left: 0;
+  top: 2rem;
+  width: 100%;
+  height: calc(100% - 2rem);
+  margin: 0 auto;
+}
+
+#windows .wrappedApp {
+  top: 0;
+  width: 100%!important;
+  height: 100%!important;
+}
+
+#windows .appWindow > iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -250,115 +280,132 @@ body {
   border: none;
 }
 
-#screen.active-statusbar #windows > .appWindow {
+#windows .fullscreen-app {
+  height: 100%!important;
+}
+
+#windows .inlineActivity {
+  top: 2rem!important;
+}
+
+#windows .appWindow > iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+#screen.active-statusbar #windows .appWindow {
   top: 4rem;
 }
 
-#windows > .appWindow:not(.homescreen) {
+#windows .appWindow:not(.homescreen) {
   background-color: #fff;
 }
 
-#windows > .appWindow:not(.homescreen).default-background {
+#windows .appWindow:not(.homescreen).default-background {
   background: url('/shared/resources/branding/splash_screen_generic.png') center center no-repeat #fff;
 }
 
-#windows > .appWindow:not(.active):not(.homescreen):not(.opening):not(.closing) {
+#windows .appWindow:not(.active):not(.homescreen):not(.opening):not(.closing) {
   visibility: hidden;
 }
 
-#windows > .appWindow:not(.homescreen):not(.active):not(.inlineActivity):not(.opening) {
+#windows .appWindow:not(.homescreen):not(.active):not(.inlineActivity):not(.opening) {
   opacity: 0;
   transform: scale(0.6);
 }
 
-#windows > .appWindow.opening {
+#windows .appWindow.opening {
   transition: transform 0.25s ease, opacity 0.15s ease;
 }
 
-#windows.slow-transition > .appWindow.opening {
+#windows.slow-transition .appWindow.opening {
   transition: transform 5s ease, opacity 3s ease;
 }
 
-#screen.cards-view > #windows > .appWindow.opening,
-#screen.cards-view > #windows > .appWindow.closing,
-#screen.switch-app > #windows > .appWindow.opening,
-#screen.switch-app > #windows > .appWindow.closing {
+#screen.cards-view > #windows .appWindow.opening,
+#screen.cards-view > #windows .appWindow.closing,
+#screen.switch-app > #windows .appWindow.opening,
+#screen.switch-app > #windows .appWindow.closing {
   transition: transform 0.25s ease;
   visibility: inherit;
   opacity: 1;
 }
 
-#screen.switch-app > #windows.slow-transition > .appWindow.opening,
-#screen.switch-app > #windows.slow-transition > .appWindow.closing {
+#screen.switch-app > #windows.slow-transition .appWindow.opening,
+#screen.switch-app > #windows.slow-transition .appWindow.closing {
   transition: transform 5s ease;
 }
 
-#screen.switch-app > #windows > .appWindow.opening-card {
+#screen.switch-app > #windows .appWindow.opening-card {
   transform: translateX(70%) scale(0.6);
   visibility: inherit;
   opacity: 1;
 }
 
-#screen.switch-app > #windows > .appWindow.opening-switching {
+#screen.switch-app > #windows .appWindow.opening-switching {
   transform: scale(0.6);
   transition: transform 0.25s ease;
   visibility: inherit;
   opacity: 1;
 }
 
-#screen.switch-app > #windows.slow-transition > .appWindow.opening-switching {
+#screen.switch-app > #windows.slow-transition .appWindow.opening-switching {
   transition: transform 5s ease;
 }
 
-#screen.switch-app > #windows > .appWindow.closing-card {
+#screen.switch-app > #windows .appWindow.closing-card {
   transform: translateX(-70%) scale(0.6);
   transition: transform 0.25s ease;
   visibility: inherit;
   opacity: 1;
 }
 
-#screen.switch-app > #windows.slow-transition > .appWindow.closing-card {
+#screen.switch-app > #windows.slow-transition .appWindow.closing-card {
   transition: transform 5s ease;
 }
 
-#windows > .appWindow.closing {
+#windows .appWindow.closing {
   transition: transform 0.25s ease, opacity 0.15s ease 0.1s;
 }
 
-#windows.slow-transition > .appWindow.closing {
+#windows.slow-transition .appWindow.closing {
   transition: transform 5s ease, opacity 3s ease 2s;
 }
 
-#windows > .appWindow.inlineActivity,
-#windows > .appWindow.hideBottom {
+#windows .appWindow.inlineActivity,
+#windows .appWindow.hideBottom {
   transform: translateY(100%);
   transition: transform 0.25s ease, visibility 0.25s ease;
 }
 
-#windows.slow-transition > .appWindow.inlineActivity,
-#windows.slow-transition > .appWindow.hideBottom {
+#windows.slow-transition .appWindow.inlineActivity,
+#windows.slow-transition .appWindow.hideBottom {
   transition: transform 5s ease, visibility 5s ease;
 }
 
-#windows > .appWindow.back {
+#windows .appWindow.back {
   transition: transform 0.25s ease, visibility 0.25s ease;
   transform: scale(0.86);
 }
 
-#windows > .appWindow.restored {
+#windows .appWindow.restored {
   transform: none;
   transition: transform 0.25s ease;
 }
 
-#windows > .appWindow.inlineActivity.active {
+#windows .appWindow.inlineActivity.active {
   transform: none;
 }
 
-#screen > #windows > .appWindow.fullscreen-app {
+#screen > #windows .appWindow.fullscreen-app {
   top: 0;
 }
 
-#screen.attention > #windows > .appWindow.fullscreen-app,
+#screen.attention > #windows .appWindow.fullscreen-app,
 #screen.attention > #windowSprite,
 #screen.fullscreen-app.attention > #windowSprite {
   height: calc(100% - 4rem);
@@ -366,7 +413,7 @@ body {
 }
 
 #windowSprite.before-inline-activity {
-  transform: translateY(calc(100% - 0.1rem));
+  transform: translateY(calc(100% - 0.10rem));
   opacity: 1;
   visibility: visible;
 }
@@ -444,10 +491,10 @@ body {
 
 iframe.backgroundWindow {
   position: absolute;
-  top: -1px;
-  left: -1px;
-  width: 1px;
-  height: 1px;
+  top: -0.10rem;
+  left: -0.10rem;
+  width: 0.10rem;
+  height: 0.10rem;
   visibility: hidden;
 }
 
@@ -534,8 +581,8 @@ iframe.backgroundWindow {
   Styles for FTU starting
 */
 
-#screen.ftu > [data-z-index-level="app"] > .appWindow.homescreen,
-#screen.ftu > [data-z-index-level="app"] > .appWindow.homescreen.active {
+#screen.ftu > [data-z-index-level="app"] .appWindow.homescreen,
+#screen.ftu > [data-z-index-level="app"] .appWindow.homescreen.active {
   opacity: 0;
 }
 
