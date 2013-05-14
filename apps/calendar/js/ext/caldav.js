@@ -3677,6 +3677,24 @@ function write (chunk) {
           findProperty('current-user-principal', data, true) ||
           findProperty('principal-URL', data, true);
 
+        // HACK TO SUPPORT DAVMAIL PROXY
+        try {
+          if (keys(data)['0'].contains('tid.es')) {
+            data[keys(data)['0']] = {
+              "current-user-principal": {
+                "status": "200",
+                "value": {
+                  "href": keys(data)['0']
+                }
+              },"principal-URL": {
+                "status":"404","value": {}
+              }
+            };
+          }
+        } catch(s) {
+        }
+        // End Of Hack
+
         if (!principal) {
           return callback(new Errors.InvalidEntrypoint(
             'both current-user-principal and principal-URL are missing'
