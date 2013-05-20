@@ -3,7 +3,7 @@
 var dom = {};
 
 var ids = ['player', 'thumbnails', 'overlay', 'overlay-title',
-           'overlay-text', 'videoControls', 'videoFrame', 'videoBar',
+           'overlay-text', 'videoControls', 'videoFrame', 'crop-view', 'videoBar',
            'close', 'play', 'playHead', 'timeSlider', 'elapsedTime',
            'video-title', 'duration-text', 'elapsed-text', 'bufferedTime',
            'slider-wrapper', 'throbber', 'delete-video-button'];
@@ -414,69 +414,12 @@ function playerMousedown(event) {
   }
 }
 
-// Make the video fit the container
+// Align vertically videoFrame view
 function setPlayerSize() {
-  var containerWidth = window.innerWidth;
-  var containerHeight = window.innerHeight;
-
-  // Don't do anything if we don't know our size.
-  // This could happen if we get a resize event before our metadata loads
-  if (!dom.player.videoWidth || !dom.player.videoHeight)
-    return;
-
-  var width, height; // The size the video will appear, after rotation
-  var rotation = 'metadata' in currentVideo ?
-    currentVideo.metadata.rotation : 0;
-
-  switch (rotation) {
-  case 0:
-  case 180:
-    width = dom.player.videoWidth;
-    height = dom.player.videoHeight;
-    break;
-  case 90:
-  case 270:
-    width = dom.player.videoHeight;
-    height = dom.player.videoWidth;
-  }
-
-  var xscale = containerWidth / width;
-  var yscale = containerHeight / height;
-  var scale = Math.min(xscale, yscale);
-
-  // scale large videos down and scale small videos up
-  // this might result in lower image quality for small videos
-  width *= scale;
-  height *= scale;
-
-  var left = ((containerWidth - width) / 2);
-  var top = ((containerHeight - height) / 2);
-
-  var transform;
-  switch (rotation) {
-  case 0:
-    transform = 'translate(' + left + 'px,' + top + 'px)';
-    break;
-  case 90:
-    transform =
-      'translate(' + (left + width) + 'px,' + top + 'px) ' +
-      'rotate(90deg)';
-    break;
-  case 180:
-    transform =
-      'translate(' + (left + width) + 'px,' + (top + height) + 'px) ' +
-      'rotate(180deg)';
-    break;
-  case 270:
-    transform =
-      'translate(' + left + 'px,' + (top + height) + 'px) ' +
-      'rotate(270deg)';
-    break;
-  }
-
-  transform += ' scale(' + scale + ')';
-
-  dom.player.style.transform = transform;
+  var containerHeight = (window.innerHeight > dom.player.offsetHeight) ?
+    window.innerHeight : dom.player.offsetHeight;
+  dom.cropView.style.marginTop = (containerHeight / 2) * -1 + 'px';
+  dom.cropView.style.height = containerHeight + 'px';
 }
 
 function setVideoUrl(player, video, callback) {
