@@ -141,6 +141,12 @@ var ThreadUI = {
     Utils.startTimeHeaderScheduler();
     // We add the infinite scroll effect for increasing performance
     this.view.addEventListener('scroll', this.manageScroll.bind(this));
+
+    // Cache fixed measurement while init
+    var style = window.getComputedStyle(this.input, null);
+    this.INPUT_PADDING = parseInt(style.getPropertyValue('padding-top'), 10) +
+      parseInt(style.getPropertyValue('padding-bottom'), 10);
+    this.INPUT_MAXHEIGHT = parseInt(style.getPropertyValue('max-height'), 10);
   },
   // We define an edge for showing the following chunk of elements
   manageScroll: function thui_manageScroll(oEvent) {
@@ -160,13 +166,11 @@ var ThreadUI = {
   },
   setInputMaxHeight: function thui_setInputMaxHeight() {
     // Method for initializing the maximum height
-    var fontSize = Utils.getFontSize();
-    var viewHeight = this.view.offsetHeight / fontSize;
-    var inputHeight = this.input.offsetHeight / fontSize;
-    var barHeight =
-      document.getElementById('new-sms-form').offsetHeight / fontSize;
-    var adjustment = barHeight - inputHeight;
-    this.input.style.maxHeight = (viewHeight - adjustment) + 'rem';
+    // Set the input height to:
+    // view height - (vertical padding (+ to field height if edit new message))
+    var viewHeight = this.view.offsetHeight;
+    var adjustment = this.INPUT_PADDING;
+    this.input.style.maxHeight = (viewHeight - adjustment) + 'px';
   },
   onBackAction: function thui_onBackAction() {
     var goBack = function() {
@@ -266,14 +270,9 @@ var ThreadUI = {
 
   updateInputHeight: function thui_updateInputHeight() {
     // First of all we retrieve all CSS info which we need
-    var inputCss = window.getComputedStyle(this.input, null);
-    var inputMaxHeight = parseInt(inputCss.getPropertyValue('max-height'), 10);
-    var fontSize = Utils.getFontSize();
-    var verticalPadding =
-      (parseInt(inputCss.getPropertyValue('padding-top'), 10) +
-      parseInt(inputCss.getPropertyValue('padding-bottom'), 10)) /
-      fontSize;
-    var buttonHeight = 30;
+    var inputMaxHeight = this.INPUT_MAXHEIGHT;
+    var verticalPadding = this.INPUT_PADDING;
+    var buttonHeight = this.sendButton.offsetHeight;
 
     // Retrieve elements useful in growing method
     var bottomBar = document.getElementById('new-sms-form');
@@ -282,14 +281,13 @@ var ThreadUI = {
     // This is when we have reached the header (UX requirement)
     if (this.input.scrollHeight > inputMaxHeight) {
       // Height of the input is the maximum
-      this.input.style.height = inputMaxHeight / fontSize + 'rem';
+      this.input.style.height = inputMaxHeight + 'px';
       // Update the bottom bar height taking into account the padding
-      bottomBar.style.height =
-        inputMaxHeight / fontSize + verticalPadding + 'rem';
+      bottomBar.style.height = (inputMaxHeight + verticalPadding) + 'px';
       // We update the position of the button taking into account the
       // new height
-      this.sendButton.style.marginTop =
-        (this.input.offsetHeight - buttonHeight) / fontSize + 'rem';
+      this.sendButton.style.marginTop = this.sendButton.style.marginTop =
+        (this.input.offsetHeight - buttonHeight) + 'px';
       return;
     }
 
@@ -300,19 +298,18 @@ var ThreadUI = {
     // with additional margin for preventing scroll bar.
     this.input.style.height =
       this.input.offsetHeight > this.input.scrollHeight ?
-      this.input.offsetHeight / fontSize + 'rem' :
-      this.input.scrollHeight / fontSize + verticalPadding + 'rem';
+      this.input.offsetHeight + 'px' :
+      (this.input.scrollHeight + verticalPadding) + 'px';
 
     // We retrieve current height of the input
     var newHeight = this.input.getBoundingClientRect().height;
 
     // We calculate the height of the bottonBar which contains the input
-    var bottomBarHeight = (newHeight / fontSize + verticalPadding) + 'rem';
+    var bottomBarHeight = (newHeight + verticalPadding) + 'px';
     bottomBar.style.height = bottomBarHeight;
 
     // We move the button to the right position
-    var buttonOffset = (this.input.offsetHeight - buttonHeight) /
-      fontSize + 'rem';
+    var buttonOffset = (this.input.offsetHeight - buttonHeight + verticalPadding) + 'px';
     this.sendButton.style.marginTop = buttonOffset;
 
     // Last adjustment to view taking into account the new height of the bar
