@@ -16,6 +16,9 @@
     <script defer src="shared/js/mobile_operator.js"></script>
     <script defer src="shared/js/manifest_helper.js"></script>
 
+    <!-- multi-resolution support -->
+    <link rel="stylesheet" href="/shared/style/responsive.css">
+
     <!-- Wrapper -->
     <link rel="stylesheet" type="text/css" href="style/wrapper/wrapper.css">
     <script type="text/javascript" defer src="js/wrapper.js"></script>
@@ -234,8 +237,6 @@
     <!-- Device storage watcher -->
     <script defer src="js/storage_watcher.js"></script>
     <link rel="stylesheet" type="text/css" href="style/storage_watcher/storage_watcher.css">
-    <!-- Shared responsive -->
-    <link rel="stylesheet" href="shared/style/responsive.css">=======
 
     <style>
       /* initlogos style is here to prevent flashing */
@@ -333,8 +334,8 @@
         <div id="statusbar-call-forwarding" class="sb-icon sb-icon-call-forwarding" hidden></div>
 
         <!-- Activity -->
-        <canvas id="statusbar-system-downloads" width="16" height="16" hidden></canvas>
-        <canvas id="statusbar-network-activity" width="16" height="16" hidden></canvas>
+        <canvas id="statusbar-system-downloads" hidden></canvas>
+        <canvas id="statusbar-network-activity" hidden></canvas>
       </div>
 
       <div id="utility-tray" data-z-index-level="utility-tray">

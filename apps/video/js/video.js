@@ -34,8 +34,9 @@ var currentVideo;  // The data for the currently playing video
 var videoCount = 0;
 var firstScanEnded = false;
 
-var THUMBNAIL_WIDTH = 160;  // Just a guess at a size for now
-var THUMBNAIL_HEIGHT = 160;
+var scaleRatio = window.innerWidth / 320;
+var THUMBNAIL_WIDTH = 210 * scaleRatio;
+var THUMBNAIL_HEIGHT = 120 * scaleRatio;
 
 // Enumerating the readyState for html5 video api
 var HAVE_NOTHING = 0;

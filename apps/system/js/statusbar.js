@@ -10,6 +10,12 @@
  */
 
 function AnimatedIcon(element, path, frames, delay) {
+  var scaleRatio = window.innerWidth / 320;
+  var baseSize = 16 * scaleRatio;
+
+  element.width = baseSize;
+  element.height = baseSize;
+
   var context = element.getContext('2d');
 
   this.frame = 1;
@@ -23,7 +29,7 @@ function AnimatedIcon(element, path, frames, delay) {
     var w = image.width;
     var h = image.height / frames;
 
-    context.drawImage(image, 0, 0, w, h, 0, 0, w, h);
+    context.drawImage(image, 0, 0, w, h, 0, 0, baseSize, baseSize);
   }
 
   this.start = function() {
@@ -33,8 +39,9 @@ function AnimatedIcon(element, path, frames, delay) {
       this.timerId = setInterval(function() {
           var w = image.width;
           var h = image.height / frames;
-
-          context.drawImage(image, 0, self.frame * h, w, h, 0, 0, w, h);
+          context.clearRect(0, 0, baseSize, baseSize);
+          context.drawImage(image, 0, self.frame * h, w, h, 0, 0,
+            baseSize, baseSize);
           self.frame++;
 
           if (self.frame == self.frames) {
