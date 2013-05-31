@@ -139,7 +139,7 @@ body[data-path^='/settings'] #time-views {
 #settings .calendars input[type="checkbox"]:checked + span {
   width: 1.4rem;
   height: 1.4rem;
-  background: transparent url('/style/icons/checkmark.png') no-repeat / 1.4rem;
+  background: url('/style/icons/checkmark.png') no-repeat right center/ 1.4rem;
 }
 
 #settings .calendars input[type="checkbox"]+span {
