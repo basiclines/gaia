@@ -84,7 +84,7 @@ input.msg-search-text-tease {
   top: 0;
   left: 3.8rem;
   /* 100% - (unread-section) - (icons-section) */
-  width: calc(100% - -4rem - 2rem - 2.8rem);
+  width: calc(100% - 4rem - 2rem - 2.8rem);
   height: 100%;
   font-size: 1.6rem;
   line-height: 2rem;
