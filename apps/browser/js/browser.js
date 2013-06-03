@@ -239,7 +239,6 @@ var Browser = {
      document.addEventListener('mozvisibilitychange',
        this.handleVisibilityChange.bind(this));
 
-     this.handleWindowResize();
 
      ModalDialog.init();
      AuthenticationDialog.init(false);
