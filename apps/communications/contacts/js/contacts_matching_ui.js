@@ -16,6 +16,7 @@ if (!contacts.MatchingUI) {
     var checkedContacts = {};
 
     var mergeButton, contactsList, duplicateMessage, title;
+    var matchingResults;
 
     function init() {
       mergeButton = document.getElementById('merge-action');
@@ -28,11 +29,13 @@ if (!contacts.MatchingUI) {
       title = document.getElementById('title');
 
       document.getElementById('merge-close').addEventListener('click', onClose);
-      contactsList.addEventListener('click', onClick);
+      contactsList.addEventListener('click', onClick, true);
       mergeButton.addEventListener('click', onMerge);
     }
 
     function load(type, contact, results, cb) {
+      matchingResults = results;
+
       document.body.dataset.mode = type;
       var params = { name: getCompleteName(getDisplayName(contact)) };
 
@@ -176,11 +179,61 @@ if (!contacts.MatchingUI) {
     function onClick(e) {
       var target = e.target;
 
+      var uuid;
       if (target && target.dataset.uuid) {
-        var uuid = target.dataset.uuid;
+        uuid = target.dataset.uuid;
+      }
+
+      if (e.clientX <= window.innerWidth * 0.4) {
         var checkbox = target.querySelector('input[type="checkbox"]');
         setChecked(target, checkbox, !checkbox.checked, uuid);
         checkMergeButton();
+      }
+      else if (uuid) {
+        var fields = ['org', 'name', 'tel', 'email', 'adr'];
+
+        var str = '';
+        var theContact = matchingResults[uuid].matchingContact;
+        var matchings = matchingResults[uuid].matchings;
+        fields.forEach(function(aField) {
+          if (Array.isArray(theContact[aField])) {
+            var fieldValue = theContact[aField][0];
+            if (matchings[aField]) {
+              var match = matchings[aField].filter(function(obj) {
+                var val = fieldValue && fieldValue.value || fieldValue;
+                if (obj.matchedValue === val) {
+                  str += '<b>';
+                }
+              });
+            }
+            if (aField === 'tel' && fieldValue) {
+              str += fieldValue.type + ', ';
+              str += fieldValue.value;
+            }
+            else if (aField === 'adr' && fieldValue) {
+              var strAdr = '';
+              strAdr += fieldValue.streetAddress + '<br>' || '';
+              strAdr += fieldValue.locality + '<br>' || '';
+              strAdr += fieldValue.region + '<br>' || '';
+              strAdr += fieldValue.countryName + '<br>' || '';
+              str += strAdr;
+            }
+            else {
+              str += fieldValue &&
+                    fieldValue.value || fieldValue || '';
+            }
+          }
+        });
+
+        var noObject = {
+          title: _('ok'),
+          isDanger: false,
+          callback: function onNoClicked() {
+            ConfirmDialog.hide();
+          }
+        };
+        window.console.log('Showing Dialog');
+        ConfirmDialog.show(null, str, noObject, null, {zIndex: 2000});
       }
     }
 
