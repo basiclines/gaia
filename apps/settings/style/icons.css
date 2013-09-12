@@ -16,17 +16,13 @@
 .menu-item::before {
   content: '';
   position: absolute;
-  top: calc((6.2rem - 3.2rem) / 2);
-  left: calc((2.5rem - 2.8rem) / 2);
+  top: 50%;
+  left: 1.5rem;
   width: 3rem;
   height: 3rem;
-  background-image: url(images/icons_sprite.gif);
+  margin-top: -1.5rem;
+  background-image: url(images/icons_sprite.png);
   background-size: 15rem;
-}
-
-li:active:not(.disabled) .menu-item::before,
-.menu-item:focus::before {
-  background-image: url(images/icons_sprite_active.gif);
 }
 
 #menuItem-airplaneMode::before {
