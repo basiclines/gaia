@@ -16,6 +16,7 @@ if (!contacts.MatchingUI) {
     var checkedContacts = {};
 
     var mergeButton, contactsList, duplicateMessage, title;
+    var matchingResults;
 
     function init() {
       mergeButton = document.getElementById('merge-action');
@@ -33,6 +34,8 @@ if (!contacts.MatchingUI) {
     }
 
     function load(type, contact, results, cb) {
+      matchingResults = results;
+
       document.body.dataset.mode = type;
       if (type === 'matching') {
         // "Suggested duplicate contacts for xxx"
@@ -57,6 +60,7 @@ if (!contacts.MatchingUI) {
     function renderList(contacts, success) {
       LazyLoader.load(listDependencies, function loaded() {
         // For each contact in the list
+        window.console.log('Contacts: ', JSON.stringify(contacts));
         var contactsKeys = Object.keys(contacts);
         contactsKeys.forEach(function(id) {
           // New contact appended
@@ -134,12 +138,42 @@ if (!contacts.MatchingUI) {
 
     function onClick(e) {
       var target = e.target;
+      var checkbox = target.querySelector('input[type="checkbox"]');
 
+      var uuid;
       if (target && target.dataset.uuid) {
-        var uuid = target.dataset.uuid;
-        var checkbox = target.querySelector('input[type="checkbox"]');
+        uuid = target.dataset.uuid;
+      }
+
+      if (target === checkbox) {
         setChecked(target, checkbox, !checkbox.checked, uuid);
         checkMergeButton();
+      }
+      else {
+        var fields = ['org', 'name', 'tel', 'email', 'adr'];
+
+        var str = '';
+        var theContact = matchingResults[uuid].matchingContact;
+        var matchings = matchingResults[uuid].matchings;
+        fields.forEach(function(aField) {
+          if (Array.isArray(theContact[aField])) {
+            if (matchings[aField]) {
+              var match = matchings[aField].filter(function(obj) {
+                var val = theContact[aField][0] &&
+                theContact[aField][0].value || theContact[aField][0];
+                if (obj.matchedValue === val) {
+                  str += '<b>';
+                }
+              });
+            }
+            if (aField === 'tel' && theContact[aField][0]) {
+              str += theContact[aField][0].type + ', ';
+            }
+            str += theContact[aField][0] &&
+                    theContact[aField][0].value || theContact[aField][0] || '';
+          }
+        });
+        alert(str);
       }
     }
 
