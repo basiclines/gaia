@@ -29,7 +29,7 @@ if (!contacts.MatchingUI) {
       title = document.getElementById('title');
 
       document.getElementById('merge-close').addEventListener('click', onClose);
-      contactsList.addEventListener('click', onClick);
+      contactsList.addEventListener('click', onClick, true);
       mergeButton.addEventListener('click', onMerge);
     }
 
@@ -60,7 +60,6 @@ if (!contacts.MatchingUI) {
     function renderList(contacts, success) {
       LazyLoader.load(listDependencies, function loaded() {
         // For each contact in the list
-        window.console.log('Contacts: ', JSON.stringify(contacts));
         var contactsKeys = Object.keys(contacts);
         contactsKeys.forEach(function(id) {
           // New contact appended
@@ -138,18 +137,18 @@ if (!contacts.MatchingUI) {
 
     function onClick(e) {
       var target = e.target;
-      var checkbox = target.querySelector('input[type="checkbox"]');
 
       var uuid;
       if (target && target.dataset.uuid) {
         uuid = target.dataset.uuid;
       }
 
-      if (target === checkbox) {
+      if (e.clientX <= window.innerWidth * 0.4) {
+        var checkbox = target.querySelector('input[type="checkbox"]');
         setChecked(target, checkbox, !checkbox.checked, uuid);
         checkMergeButton();
       }
-      else {
+      else if (uuid) {
         var fields = ['org', 'name', 'tel', 'email', 'adr'];
 
         var str = '';
@@ -157,23 +156,43 @@ if (!contacts.MatchingUI) {
         var matchings = matchingResults[uuid].matchings;
         fields.forEach(function(aField) {
           if (Array.isArray(theContact[aField])) {
+            var fieldValue = theContact[aField][0];
             if (matchings[aField]) {
               var match = matchings[aField].filter(function(obj) {
-                var val = theContact[aField][0] &&
-                theContact[aField][0].value || theContact[aField][0];
+                var val = fieldValue && fieldValue.value || fieldValue;
                 if (obj.matchedValue === val) {
                   str += '<b>';
                 }
               });
             }
-            if (aField === 'tel' && theContact[aField][0]) {
-              str += theContact[aField][0].type + ', ';
+            if (aField === 'tel' && fieldValue) {
+              str += fieldValue.type + ', ';
+              str += fieldValue.value;
             }
-            str += theContact[aField][0] &&
-                    theContact[aField][0].value || theContact[aField][0] || '';
+            else if (aField === 'adr' && fieldValue) {
+              var strAdr = '';
+              strAdr += fieldValue.streetAddress + '<br>' || '';
+              strAdr += fieldValue.locality + '<br>' || '';
+              strAdr += fieldValue.region + '<br>' || '';
+              strAdr += fieldValue.countryName + '<br>' || '';
+              str += strAdr;
+            }
+            else {
+              str += fieldValue &&
+                    fieldValue.value || fieldValue || '';
+            }
           }
         });
-        alert(str);
+
+        var noObject = {
+          title: _('ok'),
+          isDanger: false,
+          callback: function onNoClicked() {
+            ConfirmDialog.hide();
+          }
+        };
+        window.console.log('Showing Dialog');
+        ConfirmDialog.show(null, str, noObject, null, {zIndex: 2000});
       }
     }
 
