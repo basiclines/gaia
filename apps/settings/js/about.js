@@ -56,7 +56,9 @@ var About = {
            */
 
           var d = new Date(parseInt(data[1] + '000', 10));
-          dispDate.textContent = dateToUTC(d);
+          var dateFragment = document.createDocumentFragment();
+          dateFragment.textContent = dateToUTC(d);
+          dispDate.insertBefore(dateFragment, dispHash);
           dispHash.textContent = data[0];
         } else {
           console.error('Failed to fetch gaia commit: ', req.statusText);

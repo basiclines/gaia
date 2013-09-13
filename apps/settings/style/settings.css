@@ -123,6 +123,10 @@ section[role="region"] > div {
   text-decoration: underline;
 }
 
+.hint a {
+  padding-left: 1rem;
+}
+
 .hint label span {
   top: 2.9rem !important;
 }
@@ -342,7 +346,7 @@ section li.password > p {
 #carrier-operatorSettings-content:not(.gsm) #availableOperatorsHeader,
 #carrier-operatorSettings-content:not(.gsm) #availableOperators {
   display: none;
-} 
+}
 
 #carrier-dc-warning h1 > span:before,
 #carrier-dr-warning h1 > span:before {
