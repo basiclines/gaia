@@ -11,7 +11,7 @@
 
     <div>
       <ul id="cf-notreachable-advanced">
-        <li>
+        <li class="detailed">
           <p data-l10n-id="cf-numberWhenUnreachable">Number when unreachable</p>
           <input type="tel" id="cf-notreachable-number" data-setting="ril.cf.notreachable.number" disabled/>
         </li>
@@ -20,8 +20,10 @@
             <input type="checkbox" data-setting="ril.cf.notreachable.enabled"/>
             <span></span>
           </label>
-          <small data-l10n-id="callForwardingNotReachableShort">When unreachable</small>
-          <a data-l10n-id="callForwardingForward">Forward</a>
+          <a data-l10n-id="callForwardingForward">
+            Forward
+            <small data-l10n-id="callForwardingNotReachableShort">When unreachable</small>
+          </a>
         </li>
       </ul>
     </div>

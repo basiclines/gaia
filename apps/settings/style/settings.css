@@ -123,10 +123,6 @@ section[role="region"] > div {
   text-decoration: underline;
 }
 
-.hint a {
-  padding-left: 1rem;
-}
-
 .hint label span {
   top: 2.9rem !important;
 }
@@ -135,7 +131,7 @@ section[role="region"] > div {
   font-style: normal;
   position: relative;
   margin-top: -2rem;
-  padding: 0.5rem 4rem 1.3rem 1.5rem;
+  padding: 0.5rem 4rem 1.3rem 0.5rem;
   white-space: normal;
 }
 

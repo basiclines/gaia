@@ -330,11 +330,11 @@ navigator.mozL10n.ready(function bluetoothSettings() {
       var deviceDesc = document.createElement('small');
       deviceDesc.textContent = (descL10nId === '') ? '' : _(descL10nId);
       deviceDesc.dataset.l10nId = descL10nId;
+      deviceName.appendChild(deviceDesc);
+      deviceName.classList.add('bluetooth-device');
+      deviceName.classList.add('bluetooth-type-' + device.icon);
 
       var li = document.createElement('li');
-      li.classList.add('bluetooth-device');
-      li.classList.add('bluetooth-type-' + device.icon);
-      li.appendChild(deviceDesc); // should append this first
       li.appendChild(deviceName);
 
       return li;

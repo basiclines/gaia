@@ -65,7 +65,7 @@ ul li > span {
   color: #000;
   -moz-box-sizing: border-box;
   font-size: 1.9rem;
-  padding: 0 1.5rem;
+  padding: 0;
   display: inline-block;
   vertical-align: middle;
   width: 100%;
@@ -78,6 +78,12 @@ ul li.active,
 ul li:active,
 ul li:focus {
   background-color: #b2f2ff;
+}
+
+/* Description items doesn't trigger any actions */
+ul li.description:active,
+ul li.description:focus {
+  background-color: transparent;
 }
 
 /* Creates a touch area as wide and tall as the list item */
