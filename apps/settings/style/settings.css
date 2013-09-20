@@ -91,6 +91,7 @@ section[role="region"] > div {
   font-style: italic;
   font-size: 1.4rem;
   color: #505859;
+  white-space: normal;
 }
 
 .description {
